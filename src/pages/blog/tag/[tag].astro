@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import { getPublishedPosts } from '../../../utils/blog';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts.filter((p) => p.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`Posts tagged "${tag}"`} description={`Blog posts about ${tag}.`}>
+  <div class="mx-auto max-w-[680px] px-6 py-16">
+    <a
+      href="/blog"
+      class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+    >
+      ← All posts
+    </a>
+    <h1 class="mt-6 text-3xl font-semibold tracking-tight">
+      <span class="text-[var(--color-muted)]">#</span>{tag}
+    </h1>
+    <p class="mt-2 text-sm text-[var(--color-muted)]">
+      {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+    </p>
+    <div class="mt-10">
+      {posts.map((post) => <BlogCard post={post} />)}
+    </div>
+  </div>
+</BaseLayout>

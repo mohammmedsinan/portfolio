@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/projects';
+---
+
+<BaseLayout
+  title="Projects"
+  description="Selected projects: SaaS platforms, sports tech, events systems, and enterprise dashboards."
+>
+  <div class="mx-auto max-w-[960px] px-6 py-16">
+    <h1 class="text-3xl font-semibold tracking-tight">Projects</h1>
+    <p class="mt-4 max-w-[680px] text-lg leading-relaxed text-[var(--color-muted)]">
+      A selection of production systems I've architected, built, and scaled, spanning SaaS
+      platforms, consumer products, and enterprise applications.
+    </p>
+    <div class="mt-12 grid gap-4 sm:grid-cols-2">
+      {projects.map((project) => <ProjectCard project={project} featured />)}
+    </div>
+  </div>
+</BaseLayout>

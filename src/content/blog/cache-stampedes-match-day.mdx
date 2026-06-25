@@ -1,0 +1,60 @@
+---
+title: Eliminating Cache Stampedes on Match Day
+description: How single-flight deduplication and stale-while-revalidate caching fixed MySQL connection-pool exhaustion during peak fantasy sports traffic.
+pubDate: 2025-10-20
+tags: ['performance', 'nodejs', 'caching']
+draft: false
+---
+
+On match days, Koora Kings scoreboard endpoints see a spike in concurrent requests. The initial fix, a simple TTL cache, worked until it didn't.
+
+## The failure mode
+
+Scoreboard queries run heavy MySQL aggregations. We cached results with a 60-second TTL. The problem: when a cache key expired, **every concurrent request** saw a miss simultaneously and hit the database at once.
+
+This caused:
+
+- Connection pool exhaustion on DigitalOcean Managed MySQL
+- JWT auth lookups queuing behind slow aggregation queries
+- Timeouts cascading to mobile clients during live matches
+
+The worst time for the platform to degrade is exactly when users are most engaged.
+
+## The solution
+
+We built a read-through cache layer with two patterns:
+
+### Single-flight deduplication
+
+When a cache key is missing or stale, only **one** in-flight computation runs. Concurrent requests await the same promise rather than each triggering their own query.
+
+### Stale-while-revalidate
+
+Expired entries are served immediately while a background refresh repopulates the cache. Users get fast responses; the database gets at most one refresh per key per cycle.
+
+```javascript
+// Conceptual flow
+async function getCachedOrCompute(key, computeFn) {
+  const cached = cache.get(key);
+  if (cached && !cached.isStale) return cached.value;
+  if (cached?.isStale) {
+    refreshInBackground(key, computeFn); // non-blocking
+    return cached.value;
+  }
+  return deduplicatedCompute(key, computeFn);
+}
+```
+
+## Impact
+
+- Eliminated latency cliffs at cache expiry boundaries
+- Restored platform stability during peak match-day concurrent load
+- Reduced duplicate aggregation queries without increasing cache TTL (keeping data reasonably fresh)
+
+## Lessons
+
+- **TTL caching alone is not enough** under concurrent read-heavy workloads
+- Instrument cache hit/miss rates and connection pool utilization together. The symptoms appear in auth layers, but the root cause may be elsewhere
+- Sports platforms have hard real-time boundaries (match kickoff, transfer deadlines) where reliability directly affects user trust
+
+This pattern is now reused across other read-heavy endpoints in the Koora Kings backend.

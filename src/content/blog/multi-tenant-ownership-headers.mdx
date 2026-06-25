@@ -1,0 +1,166 @@
+---
+title: Why Multi-Tenant APIs Should Scope Ownership Through Headers, Not Request Bodies
+description: Trusting tenantId or workspaceId from a POST body is an IDOR waiting to happen. When header-based tenancy scoping is the right call — and how to implement it cleanly.
+pubDate: 2026-03-15
+tags: ['architecture', 'security', 'saas']
+draft: false
+---
+
+Every multi-tenant SaaS eventually hits the same design question: how does the API know **which tenant's data** a request is operating on?
+
+The answer seems obvious — pass a `tenantId`, `workspaceId`, or `organizationId` in the request. The client knows where the user is working. Put it in the JSON body and move on.
+
+That works until someone opens DevTools and changes the ID.
+
+## The tempting shortcut
+
+A common pattern in early SaaS builds looks like this:
+
+```typescript
+// POST /api/v1/reports/generate
+{
+  "workspaceId": "ws_abc123",
+  "format": "pdf"
+}
+```
+
+The handler reads `workspaceId` from the body, loads the report pipeline, and runs. Fast to ship. Easy to test in Postman.
+
+It is also the wrong place to establish ownership.
+
+If your authorization check is "does this JWT belong to a valid user?" plus "does the body contain a workspaceId?", you have not verified that the user **may access that workspace**. You have verified that the user **claimed** a workspace. Any authenticated user can substitute another tenant's ID and trigger an Insecure Direct Object Reference (IDOR).
+
+In a product where documents, billing records, team settings, and audit logs all hang off a tenant, that is not a theoretical bug. It is a compliance incident waiting for a curious user.
+
+## Why headers, not bodies
+
+A better pattern treats tenancy as **ambient request context** — carried in trusted headers, set by the authenticated client and validated server-side:
+
+```
+x-organization-id: org_xyz
+x-workspace-id:  ws_abc123
+```
+
+Or, for deeper hierarchies:
+
+```
+x-organization-id: org_xyz
+x-project-id:      proj_456
+x-environment-id:  env_789
+```
+
+Every data access layer scopes queries by IDs derived from those headers — never from DTO fields.
+
+This is deliberate for four reasons.
+
+### 1. Ownership is context, not payload
+
+`workspaceId` is not really an input to "generate report." It is **where** the report runs. Conflating ambient tenancy with business payload makes it easy to forget a scope check on one endpoint, or to add a new route that accidentally trusts the body.
+
+Headers force a separation of concerns:
+
+- **Headers** → who is acting, in which tenant context
+- **Body** → what they want to do
+
+When every scoped call carries the same headers, code review has a single pattern to look for. Missing scope becomes obvious.
+
+### 2. The client can enforce consistency once
+
+On the frontend, centralized HTTP interceptors read the active tenant context from auth state and attach headers automatically:
+
+```typescript
+// Conceptual interceptor
+httpClient.interceptors.request.use((config) => {
+  if (config.withWorkspace) {
+    config.headers['x-workspace-id'] = getActiveWorkspaceId();
+    config.headers['x-organization-id'] = getActiveOrganizationId();
+  }
+  return config;
+});
+```
+
+Feature teams do not re-implement scoping per hook. Switching workspaces in the sidebar updates context globally; the next API call is scoped correctly without each form remembering to pass an ID.
+
+Tenant headers should be cleared on auth transitions so stale context cannot leak across login sessions.
+
+### 3. The backend can fail closed in one guard layer
+
+Stack authentication and authorization guards before your handlers. The auth layer resolves header values, verifies the user belongs to that org/workspace/project, and injects a trusted context object for services to use.
+
+```typescript
+// Simplified handler pattern
+@UseGuards(AuthGuard, TenantGuard)
+@Post('reports/generate')
+generateReport(@TenantContext() ctx: TenantContext, @Body() dto: GenerateReportDto) {
+  // ctx.workspaceId comes from validated headers — not dto.workspaceId
+  return this.reportService.generate(ctx.workspaceId, dto);
+}
+```
+
+Request DTOs may still contain IDs for **nested resources** (e.g. `taskId` to complete a specific item), but those are always validated **against** the header-scoped tenant — never used as the primary tenancy key.
+
+### 4. It matches how users actually work
+
+Users switch between workspaces, projects, or client accounts dozens of times per session. The "current context" is UI state, not something they should re-type into every form. Headers mirror the mental model: you pick a workspace in the app shell; everything below inherits that scope.
+
+## When header-based ownership is the right call
+
+Use trusted headers (or an equivalent server-resolved session context) when:
+
+- **You have hierarchical multi-tenancy.** Organization → workspace → project, account → site, team → board — any nested model where "where am I working?" is session context.
+- **Most endpoints are scoped the same way.** If 80% of routes need the same tenant key, centralize it instead of repeating body validation.
+- **Clients are browsers or mobile apps you control.** You can set interceptors and keep header names stable across the API surface.
+- **Cross-tenant leaks are high severity.** Customer data, billing, internal documents, health records — anything that would fail a security audit.
+- **You run RBAC per resource type.** Headers give guards a single entry point to resolve "user U in context C may perform action A."
+
+## When body or path IDs are fine — with rules
+
+Headers are not a religion. They are a default for **tenancy context**. Resource IDs in paths or bodies still make sense when:
+
+- **The resource is the subject of the operation.** `PATCH /tasks/:taskId/complete` — the task ID is the payload's focus. But the handler must still verify `task.workspaceId === ctx.workspaceId` from headers before mutating.
+- **The API is public or third-party.** External integrators often prefer explicit path parameters (`/workspaces/{id}/reports`). That is fine; the server still validates the API key or token against that workspace. The ID is in the URL for discoverability, not because the client is trusted.
+- **You are creating a new resource under a parent.** `POST /organizations/:orgId/projects` — the parent is in the path, validated against the user's membership, and the new resource inherits that chain.
+
+The rule is simple: **never treat a client-supplied ID as proof of ownership.** Whether it arrives in a header, path, or body, the server must resolve it against the authenticated principal.
+
+## Alternatives that also work
+
+Headers are one implementation. The same principle applies to:
+
+- **Server-side session context** — tenant ID stored in the session after login or workspace switch; handlers read from session, not request input.
+- **JWT claims** — embed `workspaceId` in a short-lived token issued when the user selects a workspace. Useful for stateless APIs, but tokens must be reissued on context switch.
+- **Subdomain routing** — `acme.yourapp.com` resolves tenant from the hostname. Strong isolation, but harder to implement and test locally.
+
+What matters is not the transport mechanism. What matters is that **tenancy is resolved and verified server-side before any data access** — and that the client cannot silently override it per request.
+
+## What teams usually get wrong early
+
+The first integration pass often mixes patterns. Some handlers read `workspaceId` from the body because the prototype did. Some frontend hooks pass it explicitly per call. Tests pass because everyone uses their own workspace ID honestly.
+
+The refactor is boring and worth it:
+
+1. Define canonical header names (or one session key) and document them in the API spec.
+2. Add opt-in scoping flags on the HTTP client (`withWorkspace`, `withOrganization`) so each call declares its context needs explicitly.
+3. Move all repository queries to accept a single tenant parameter sourced from the guard layer — not from the request DTO.
+4. Strip ownership fields from request bodies where they duplicate header context.
+
+Greenfield modules should adopt this from day one. Retrofitting a mixed codebase is slower and error-prone.
+
+## Practical checklist
+
+Before shipping a multi-tenant endpoint, ask:
+
+1. **Where does tenancy come from?** If the answer is "the JSON body," reconsider.
+2. **Can this handler run without a workspace context?** If not, make headers required and let guards reject early with 403.
+3. **Does a nested resource ID imply a tenant?** Join or lookup the resource, then compare to header scope.
+4. **Does the frontend have one path to set context?** Interceptors beat per-form hidden fields.
+5. **Are public routes exempt?** Public or shareable resources need their own authorization model — deliberately outside the authenticated tenant interceptor chain.
+
+## Takeaways
+
+- **Ownership is authorization, not input.** Clients suggest context; servers prove it.
+- **Headers keep tenancy visible and consistent** across a large API surface — one pattern for reviewers, one guard layer for enforcement.
+- **Separate "where" from "what"** and your IDOR surface shrinks dramatically.
+- **Adopt the pattern early.** The cost of retrofitting grows with every endpoint that trusts the body.
+
+If you are building a multi-tenant SaaS and every POST body includes a `tenantId`, ask whether that ID belongs in the payload at all. It probably belongs in the guard.

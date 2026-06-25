@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projects, getProject } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const project = getProject(slug!);
+
+if (!project) {
+  return Astro.redirect('/projects');
+}
+---
+
+<BaseLayout title={project.title} description={project.summary}>
+  <article class="mx-auto max-w-[680px] px-6 py-16">
+    <a
+      href="/projects"
+      class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+    >
+      ← All projects
+    </a>
+
+    <header class="mt-8 border-b border-[var(--color-border)] pb-8">
+      <p class="text-sm text-[var(--color-muted)]">{project.company} · {project.period}</p>
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{project.title}</h1>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">{project.role}</p>
+      {
+        project.url && (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2 inline-block text-sm text-[var(--color-muted)] underline underline-offset-4 transition-colors hover:text-[var(--color-ink)]"
+          >
+            {project.url.replace(/^https?:\/\//, '')} ↗
+          </a>
+        )
+      }
+      <p class="mt-6 text-lg leading-relaxed text-[var(--color-muted)]">{project.summary}</p>
+    </header>
+
+    {
+      project.problem && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Problem
+          </h2>
+          <p class="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">{project.problem}</p>
+        </section>
+      )
+    }
+
+    {
+      project.overview && project.overview.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Overview
+          </h2>
+          <div class="mt-4 space-y-4">
+            {project.overview.map((paragraph) => (
+              <p class="text-sm leading-relaxed text-[var(--color-muted)]">{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      project.metrics.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Impact
+          </h2>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {project.metrics.map((metric) => (
+              <li class="border border-[var(--color-border)] px-4 py-3 text-sm">{metric}</li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      project.sections && project.sections.length > 0 && (
+        <div class="mt-10 space-y-10">
+          {project.sections.map((section) => (
+            <section>
+              <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+                {section.title}
+              </h2>
+              {
+                section.paragraphs && (
+                  <div class="mt-4 space-y-3">
+                    {section.paragraphs.map((p) => (
+                      <p class="text-sm leading-relaxed text-[var(--color-muted)]">{p}</p>
+                    ))}
+                  </div>
+                )
+              }
+              {
+                section.items && section.items.length > 0 && (
+                  <ul class="mt-4 space-y-3">
+                    {section.items.map((item) => (
+                      <li class="flex gap-3 text-sm leading-relaxed text-[var(--color-muted)]">
+                        <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--color-muted)]" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )
+              }
+            </section>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      (!project.sections || project.sections.length === 0) && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Highlights
+          </h2>
+          <ul class="mt-4 space-y-3">
+            {
+              project.highlights.map((highlight) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-[var(--color-muted)]">
+                  <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--color-muted)]" />
+                  {highlight}
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      project.challenges && project.challenges.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Technical Challenges
+          </h2>
+          <div class="mt-6 space-y-6">
+            {
+              project.challenges.map((challenge) => (
+                <div class="border border-[var(--color-border)] p-5">
+                  <h3 class="text-sm font-medium">{challenge.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+                    <span class="font-medium text-[var(--color-ink)]">Problem: </span>
+                    {challenge.problem}
+                  </p>
+                  <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+                    <span class="font-medium text-[var(--color-ink)]">Solution: </span>
+                    {challenge.solution}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+      )
+    }
+
+    {
+      project.sections && project.sections.length > 0 && project.highlights.length > 0 && (
+        <section class="mt-10">
+          <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+            Key Contributions
+          </h2>
+          <ul class="mt-4 space-y-3">
+            {
+              project.highlights.map((highlight) => (
+                <li class="flex gap-3 text-sm leading-relaxed text-[var(--color-muted)]">
+                  <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--color-muted)]" />
+                  {highlight}
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="mt-10">
+      <h2 class="text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+        Stack
+      </h2>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {
+          project.stack.map((tech) => (
+            <span class="rounded-full border border-[var(--color-border)] px-2.5 py-0.5 text-xs text-[var(--color-muted)]">
+              {tech}
+            </span>
+          ))
+        }
+      </div>
+    </section>
+  </article>
+</BaseLayout>

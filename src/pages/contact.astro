@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../data/site';
+---
+
+<BaseLayout title="Contact" description={`Contact ${SITE.name}`}>
+  <div class="mx-auto max-w-[680px] px-6 py-16">
+    <h1 class="text-3xl font-semibold tracking-tight">Contact</h1>
+    <p class="mt-6 text-lg leading-relaxed text-[var(--color-muted)]">
+      I'm open to senior engineering roles and interesting product collaborations.
+      The best way to reach me is by email.
+    </p>
+
+    <div class="mt-12 space-y-6">
+      <div class="border border-[var(--color-border)] p-6">
+        <p class="text-xs uppercase tracking-wider text-[var(--color-muted)]">Email</p>
+        <a
+          href={`mailto:${SITE.email}`}
+          class="mt-2 block text-lg font-medium transition-opacity hover:opacity-70"
+        >
+          {SITE.email}
+        </a>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <a
+          href={SITE.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border border-[var(--color-border)] p-6 transition-colors hover:border-[var(--color-ink)]"
+        >
+          <p class="text-xs uppercase tracking-wider text-[var(--color-muted)]">LinkedIn</p>
+          <p class="mt-2 font-medium">Connect on LinkedIn →</p>
+        </a>
+        <a
+          href={SITE.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border border-[var(--color-border)] p-6 transition-colors hover:border-[var(--color-ink)]"
+        >
+          <p class="text-xs uppercase tracking-wider text-[var(--color-muted)]">GitHub</p>
+          <p class="mt-2 font-medium">View projects on GitHub →</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

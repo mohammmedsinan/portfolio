@@ -1,0 +1,50 @@
+---
+import { SITE, NAV_LINKS } from '../data/site';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="border-b border-[var(--color-border)]">
+  <div class="mx-auto flex max-w-[960px] items-center justify-between px-6 py-5">
+    <a
+      href="/"
+      class="text-sm font-medium tracking-tight text-[var(--color-ink)] transition-opacity hover:opacity-70"
+    >
+      {SITE.name}
+    </a>
+    <nav class="flex items-center gap-6">
+      {
+        NAV_LINKS.map(({ href, label }) => (
+          <a
+            href={href}
+            class:list={[
+              'hidden text-sm transition-colors sm:inline-block',
+              currentPath.startsWith(href)
+                ? 'text-[var(--color-ink)]'
+                : 'text-[var(--color-muted)] hover:text-[var(--color-ink)]',
+            ]}
+          >
+            {label}
+          </a>
+        ))
+      }
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+        class="text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+      >
+        <span class="dark:hidden" aria-hidden="true">◐</span>
+        <span class="hidden dark:inline" aria-hidden="true">◑</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('theme-toggle');
+  toggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>

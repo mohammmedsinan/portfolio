@@ -1,0 +1,32 @@
+---
+import { formatDate, getReadingTime } from '../utils/blog';
+import type { BlogEntry } from '../utils/blog';
+import TagList from './TagList.astro';
+
+interface Props {
+  post: BlogEntry;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+const readingTime = getReadingTime(post.body ?? '');
+---
+
+<a
+  href={`/blog/${post.id}`}
+  class="group block border-b border-[var(--color-border)] py-6 transition-colors last:border-b-0"
+>
+  <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+    <h3 class="text-base font-medium tracking-tight group-hover:underline">
+      {title}
+    </h3>
+    <time datetime={pubDate.toISOString()} class="shrink-0 text-sm text-[var(--color-muted)]">
+      {formatDate(pubDate)}
+    </time>
+  </div>
+  <p class="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">{description}</p>
+  <div class="mt-3 flex items-center gap-4">
+    <span class="text-xs text-[var(--color-muted)]">{readingTime} min read</span>
+    {tags.length > 0 && <TagList tags={tags.slice(0, 3)} />}
+  </div>
+</a>

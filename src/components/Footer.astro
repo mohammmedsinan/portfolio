@@ -1,0 +1,44 @@
+---
+import { SITE } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-border)]">
+  <div
+    class="mx-auto flex max-w-[960px] flex-col items-start justify-between gap-4 px-6 py-8 sm:flex-row sm:items-center"
+  >
+    <p class="text-sm text-[var(--color-muted)]">
+      © {year} {SITE.name}
+    </p>
+    <div class="flex gap-5">
+      <a
+        href={`mailto:${SITE.email}`}
+        class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+      >
+        Email
+      </a>
+      <a
+        href={SITE.github}
+        class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+      <a
+        href={SITE.linkedin}
+        class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </a>
+      <a
+        href="/rss.xml"
+        class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+      >
+        RSS
+      </a>
+    </div>
+  </div>
+</footer>

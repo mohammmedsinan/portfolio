@@ -1,0 +1,59 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Prose from '../components/Prose.astro';
+import TagList from '../components/TagList.astro';
+import { formatDate, getReadingTime } from '../utils/blog';
+import type { BlogEntry } from '../utils/blog';
+
+interface Props {
+  post: BlogEntry;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate, tags } = post.data;
+const readingTime = getReadingTime(post.body ?? '');
+---
+
+<BaseLayout title={title} description={description} ogType="article">
+  <article class="mx-auto max-w-[680px] px-6 py-16">
+    <header class="mb-10 border-b border-[var(--color-border)] pb-8">
+      <time
+        datetime={pubDate.toISOString()}
+        class="text-sm text-[var(--color-muted)]"
+      >
+        {formatDate(pubDate)}
+      </time>
+      {
+        updatedDate && (
+          <span class="text-sm text-[var(--color-muted)]">
+            {' '}
+            · Updated {formatDate(updatedDate)}
+          </span>
+        )
+      }
+      <span class="text-sm text-[var(--color-muted)]"> · {readingTime} min read</span>
+      <h1 class="mt-4 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
+        {title}
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-[var(--color-muted)]">
+        {description}
+      </p>
+      {tags.length > 0 && (
+        <div class="mt-6">
+          <TagList tags={tags} linked />
+        </div>
+      )}
+    </header>
+    <Prose>
+      <slot />
+    </Prose>
+    <footer class="mt-16 border-t border-[var(--color-border)] pt-8">
+      <a
+        href="/blog"
+        class="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+      >
+        ← Back to blog
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

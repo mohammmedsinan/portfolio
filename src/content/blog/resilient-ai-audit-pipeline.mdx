@@ -1,0 +1,65 @@
+---
+title: Building a Resilient AI Audit Pipeline
+description: How we designed a multi-stage NestJS pipeline with deterministic LLM fallbacks, contract validation, and reproducible audit cycles for a local SEO SaaS.
+pubDate: 2025-08-15
+tags: ['architecture', 'nestjs', 'ai']
+draft: false
+---
+
+LocalEyes AI converts business onboarding data, Google Business Profile signals, competitor intelligence, and ranking snapshots into structured audits and weekly improvement tasks. The hard part isn't calling an LLM; it's making the pipeline **reliable** when models fail, truncate, or return invalid JSON.
+
+## The problem
+
+A local SEO audit depends on a chain of transformations:
+
+1. Assemble inputs from GBP, reviews, rankings, and questionnaire data
+2. Run an Analysis Pass to produce structured scores and risk flags
+3. Validate output against versioned JSON contracts
+4. Generate prioritized actions and seed a task pool
+5. Run a Report Pass for a client-ready Markdown summary
+
+Any broken link in that chain means a failed audit cycle and a frustrated business owner waiting for results.
+
+## Architecture decisions
+
+We built the system as a **self-contained NestJS module** (~74 files, 17 REST endpoints) deliberately decoupled from legacy task systems. Each audit cycle persists:
+
+- A SHA-256 hash of the input bundle for reproducibility
+- Pipeline run metadata (stage, model, token usage, errors)
+- The full universal audit record as JSON for downstream regeneration
+
+Multi-tenant isolation is enforced at every layer: JWT + RBAC guards, with `locationId` scoped from trusted headers, never from request body fields.
+
+## Dual-mode AI execution
+
+The core reliability pattern is **dual-mode execution** for both Analysis and Report passes:
+
+```typescript
+// Simplified concept: live mode vs fallback mode
+if (deepseekAvailable && !modelDisabled) {
+  result = await deepseekService.analyze(input);
+} else {
+  result = deterministicAnalysisBuilder(input);
+}
+```
+
+When DeepSeek is unavailable (missing API key, CI environment, or production degradation), deterministic local builders synthesize analysis from questionnaire disclosures, risk flags, and input signals. Failed cycles are marked `failed` with a stored error message rather than crashing the platform.
+
+## Preventing recommendation overload
+
+Raw audit data can produce dozens of possible fixes. We implemented:
+
+- **Volume caps**: 15 actions on first audit, 10 on subsequent
+- **Deduplication** by factor ID, with negative triggers overriding duplicate score-gap actions
+- A **hidden task pool** with weekly release capping visible work at 4 tasks per priority bucket
+
+This converts complex audit output into digestible weekly execution plans, a product-engineering solution, not just a backend detail.
+
+## Takeaways
+
+- Treat LLM output as **untrusted input**. Validate against schemas before persistence
+- Design fallback paths from day one, not as an afterthought
+- Version your contracts explicitly (we maintained 10+ versioned JSON specs across the pipeline)
+- Separate "generate everything" from "show the client what they can act on this week"
+
+The module is live in production at [dashboard.localeyes.ai](https://dashboard.localeyes.ai), powering audits for multi-location businesses and agencies.
