@@ -16,17 +16,32 @@ const latestPosts = posts.slice(0, 3);
     <section class="max-w-[680px]">
       <p class="text-sm text-[var(--color-muted)]">{SITE.role}</p>
       <h1 class="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-        Ship software that scales.
+        Full-stack Node.js. Production systems that scale.
       </h1>
       <p class="mt-6 text-lg leading-relaxed text-[var(--color-muted)]">
         {SITE.bio}
       </p>
-      <div class="mt-8 flex gap-4">
+      <div class="mt-8 flex flex-wrap gap-4">
         <a
           href="/projects"
           class="border border-[var(--color-ink)] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-surface)]"
         >
           View projects
+        </a>
+        <a
+          href={SITE.cv}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="border border-[var(--color-border)] px-5 py-2.5 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]"
+        >
+          Preview CV
+        </a>
+        <a
+          href={SITE.cv}
+          download="Mohammed-Sinan-CV.pdf"
+          class="border border-[var(--color-border)] px-5 py-2.5 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-ink)] hover:text-[var(--color-ink)]"
+        >
+          Download CV
         </a>
         <a
           href="/contact"
