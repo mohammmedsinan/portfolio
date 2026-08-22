@@ -1,75 +1,73 @@
-**Mohammed Sinan**  
-**Full-Stack Developer**  
-Number : (+964)7723424247, Email : [mohammedbusiness1099@gmail.com](mailto:mohammedbusiness1099@gmail.com)   
-Github : github.com/mohammmedsinan, LinkedIn : linkedin.com/in/msinan1   
-Website : m-sinan.netlify.app  
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
-**Summary :** *Software Developer with 5+ years of full-stack experience in [Node.js](http://Node.js) ecosystems. Delivered 10+ real-world projects, optimized a system performance by up to 63% and implemented scalable, enterprise serverless solutions using CI/CD pipelines and cloud architectures*.  
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+# Mohammed Sinan
 
-**Work Experience :**   
-       **LocalEyesAi ([localeyes.ai](http://localeyes.ai))                                                                                         *Canada ( Remote )***  
-       Full-Stack Developer                                                                                                     *Jun. 2026 \- Present*
+**Full-Stack Software Engineer | TypeScript · Node.js · NestJS · React**
 
-- Sole backend engineer NestJS / TypeScript SaaS API for local SEO (GBP, ranking, billing, AI audits)  
-- Designed a **multi-tenant NestJS API** (organisation, business, location) with **JWT, RBAC, and IDOR** checks so tenants cannot access each other’s data.  
-- Built **bidirectional Google Business Profile sync** (OAuth, inbound/outbound, field-mask merge) plus **profile-protection webhooks** for Google-suggested edits.  
-- Implemented **geo-grid rank tracking** (**multi-pin SERP, archives, weekly history**) and distance-weighted competitor scoring with change alerts.  
-- Shipped a **contract-driven AI audit pipeline**: preprocessors \-\> LLM passes \-\> JSON Schema validation \-\> N-factor group-weighted scores \-\> weekly tasks (LLM output treated as untrusted).  
-- **Integrated Stripe** (checkout, signed webhooks, idempotent events) with per-location plans and entitlements (keywords, competitors, seats).  
-- **Owned production jobs and deploy**: cron for GBP/rank/billing/AI, Docker, and CI to Digital Ocean.
+(+964) 772 342 4247 | [mohammedbusiness1099@gmail.com](mailto:mohammedbusiness1099@gmail.com)<br>
+GitHub: [github.com/mohammmedsinan](https://github.com/mohammmedsinan) | LinkedIn: [linkedin.com/in/msinan1](https://linkedin.com/in/msinan1)<br>
+Portfolio: [m-sinan.netlify.app](https://m-sinan.netlify.app)
 
-       **KooraKings ( [*koorakings.com*](http://koorakings.com) )                                                               *Kitchener Canada ( Remote )***  
-       **Optimiza.ca (** *Full-Stack Developer* )                                                         *Jun. 2021 \- Present*
+## Professional Summary
 
-- Built and scaled the **Node.js / Sails.js** backend for Koora Kings, supporting **80K**\+ users, **1K+** contests, and **2M+** predictions via **\~180 REST APIs**.  
-- Implemented match prediction contests with join/invite flows, **confidence/risk scoring**, and SQL-backed **leaderboards handling millions of prediction** records.  
-- Developed an **FPL-style salary-cap fantasy system**: budget squads, transfers, free-transfer costing, auto-pick, and chips (**wildcard, free hit, triple captain, bench boost**).  
-- Integrated with an external provider feeds to sync **leagues, fixtures, live scores, and player stats into MySQL**, powering live scoring for active contests.  
-- Delivered admin **CMS APIs** for sports feed ops, sponsored contests, banners, and targeted notifications at **production scale**.  
-- Containerized the service with **Docker for staging/production** deployments.
+Full-Stack Software Engineer with 5+ years of experience building and operating production SaaS products and high-traffic web platforms using TypeScript, Node.js, NestJS, React, and Next.js. Experienced in designing multi-tenant APIs, authentication and authorization systems, background processing, payment integrations, third-party APIs, and cloud infrastructure. Built systems handling 2M+ user predictions, improved application performance by up to 63%, and delivered production services using Docker and CI/CD.
 
-       ***Riyadh Season*  ( *Contract* )                                                                      *Kitchener Canada ( Remote )***  
-       **Optimiza.ca (** *Front-End Developer* )                                                         *Jun. 2021 \- Present*
+## Professional Experience
 
-- Managed API operations for a **30-page web platform fully integrated** with an internally developed CMS.  
-- Re-engineered the legacy HTML, CSS, and JavaScript frontend API integration, **modernizing endpoint communication** and improving overall application **performance by 24%.**  
-- Implemented **server-side caching and lazy loading** to optimize API response handling, resource utilization, and page load performance.  
-- **Optimized and minified production bundles**, reducing deployment pipeline execution **time to 34 seconds.**  
-- **Designed and implemented a DTO** (Data Transfer Object) layer to standardize frontend–backend data contracts and simplify **integration of future features**.  
-- **Authored comprehensive technical documentation** covering the project architecture, API integrations, development workflows, and implementation details.
+### LocalEyes AI — Full-Stack Developer / Lead Backend Engineer
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+**Remote | Jun 2026 – Present**<br>
+*Tech: TypeScript, NestJS, MySQL, BullMQ, Valkey, Stripe, Google APIs, Docker, DigitalOcean*
 
-**Projects :**  
-**Dashboard Project :** 
+- Architected and developed a multi-tenant NestJS SaaS backend with JWT authentication, RBAC, and IDOR protection, enforcing strict tenant-level data isolation.
+- Engineered bidirectional Google Business Profile synchronization using OAuth 2.0, field-mask merging, inbound/outbound synchronization, and webhooks for Google-suggested profile changes.
+- Built reliable BullMQ background workers for Google Business Profile synchronization, OAuth processing, billing operations, AI workflows, and other asynchronous jobs.
+- Developed a geo-grid local rank tracking system with multi-point SERP scans, historical rankings, weekly tracking, competitor scoring, and ranking-change alerts.
+- Implemented an AI-powered GBP audit pipeline using preprocessing, LLM processing, JSON Schema validation, scoring, weighted analysis, and scheduled re-audits.
+- Integrated Stripe subscription billing, including Checkout, signed webhooks, idempotent event handling, coupons, subscription management, and per-location plans.
+- Owned production background jobs, Docker deployment workflows, CI/CD pipelines, and application deployments to DigitalOcean.
+- Improved backend performance and reliability across production services through caching, asynchronous processing, and architecture optimization.
 
-- Technologies that were used in this project: ( React, Less, Redux, AntD, Charts, Router, Axios )  
-- Designed and implemented a dynamic routing and Redux state management system in React, eliminating the need for manually defining routes or models.  
-- Built a scalable project architecture that serves as a reusable base for large, production-grade React applications  
-- Integrated Redux Toolkit, React Router v6, and Redux Thunk to streamline state flow and route handling, improving maintainability and developer experience.   
-- Implemented modular, reusable components with Ant Design and Chart.js for creating interactive dashboards and data visualizations   
-- Configured a custom Webpack and Babel setup for optimized builds, efficient code splitting, and smooth development workflow. 
+### KooraKings — Full-Stack Developer
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+**Optimiza | Remote | Jun 2021 – Present**<br>
+*Tech: Node.js, Sails.js, MySQL, Firebase, Docker, REST APIs*
 
-**Education :**  
-**University of Tikrit (** *Bachelor’s in Business Administration* **)**                                                            *Mar. 2022 ‑ Aug. 2026*   
-**HackerRank (** *Software Engineer* **)**                                                                                                     *Mar. 2025*   
-**FreeCodeCamp (** *JS / Algorithms and Data Structures* **)**                                                                    *Mar. 2025*   
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- Built and maintained the Sails.js backend powering KooraKings sports contests and 2M+ user predictions across approximately 180 REST endpoints.
+- Designed prediction-processing workflows supporting join/invite functionality, confidence and risk scoring, and SQL-backed leaderboards handling millions of prediction records.
+- Developed an FPL-style salary-cap fantasy system supporting budget squads, transfers, free-transfer costing, auto-pick, chips, wildcard, free hit, triple captain, and bench boost functionality.
+- Integrated external football data providers to synchronize leagues, fixtures, live scores, teams, and player statistics into MySQL.
+- Developed CMS and administrative APIs supporting sports operations, sponsored contests, banners, user targeting, and push notifications.
+- Implemented backend functionality for contest management, prediction validation, ranking calculations, and user participation workflows.
+- Containerized the backend using Docker for consistent staging and production deployments.
 
-**Technical Skills :**
+### Riyadh Season — Front-End Developer
 
-- **Front-End** : React, Next.js, Gatsby, JavaScript, TypeScript, HTML, CSS, Less, Sass, Tailwind, AntD, Bootstrap.  
-- **Back-End** : Node.js, Nestjs, SailsJS, Express, GraphQL, Firebase, MongoDB, MySQL, MariaDB, superbase   
-- **Tools** : Webpack, Vite, (TypeORM, Drizzle, Prisma and Waterline) , Babel, Git, Jest, CI/CD (Bitbucket, GitHub Actions)   
-- **Other** : Python, AWS, GCP
+**Optimiza | Contract · Remote | Jun 2021 – Present**<br>
+*Tech: React / JavaScript, HTML, CSS, REST APIs, CMS Integration, Webpack*
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- Developed and maintained a 30+ page production web platform fully integrated with a content management system.
+- Re-engineered legacy frontend code and API integrations, improving overall application performance by approximately 24%.
+- Implemented server-side caching and lazy loading strategies to optimize API response handling, resource utilization, and frontend performance.
+- Optimized and minified production bundles, reducing deployment pipeline execution time to approximately 34 seconds.
+- Designed and implemented a DTO layer to standardize frontend-backend data contracts and simplify future feature integrations.
+- Improved maintainability of the frontend architecture by modernizing routing, state handling, API communication, and reusable application components.
+- Authored comprehensive technical documentation covering system architecture, API integrations, deployment workflows, and implementation details.
 
-- **KooraKings** : https://koorakings.com   
-- **Localeyes AI** : https://localeyes.ai   
-- **Marham** : https://marham.care   
-- **( JS / Algorithms and Data Structures ) \- certification** : https://freecodecamp.org/certification/fcc3c73bf9b-a6f3-4c4b-b4e0-173354fc95ad/javascript-algorithms-and-data-structures-v8   
-- **Software Engineer \- Certification** : https://www.hackerrank.com/certificates/82d47e7b38f5
+## Technical Skills
+
+- **Languages:** TypeScript, JavaScript, Python, SQL
+- **Backend:** Node.js, NestJS, Express.js, Sails.js, REST APIs
+- **Frontend:** React, Next.js, Astro, Tailwind CSS, Ant Design, Redux Toolkit, React Router, TanStack Query
+- **Databases & Data:** MySQL, MariaDB, MongoDB, Supabase, TypeORM, Prisma, Drizzle, Waterline
+- **Infrastructure & Architecture:** Redis / Valkey, BullMQ, Firebase, Multi-Tenant SaaS, RBAC, OAuth 2.0, Webhooks
+- **Cloud & DevOps:** Docker, AWS, GCP, DigitalOcean, GitHub Actions, Bitbucket Pipelines, CI/CD
+- **Tools & Testing:** Git, Jest, Vite, Webpack, Babel
+
+## Education
+
+**University of Tikrit**<br>
+Bachelor of Business Administration | Aug 2026
+
+## Certifications
+
+- [HackerRank — Software Engineer Certification](https://www.hackerrank.com/certificates/82d47e7b38f5) | Mar 2025
+- [freeCodeCamp — JavaScript Algorithms and Data Structures](https://freecodecamp.org/certification/fcc3c73bf9b-a6f3-4c4b-b4e0-173354fc95ad/javascript-algorithms-and-data-structures-v8) | Mar 2025

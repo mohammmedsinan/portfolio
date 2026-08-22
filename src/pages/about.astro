@@ -3,78 +3,96 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../data/site';
 
 const skills = {
-  'Back-End': [
-    'NestJS',
-    'TypeScript',
+  Languages: ['TypeScript', 'JavaScript', 'Python', 'SQL'],
+  Backend: [
     'Node.js',
+    'NestJS',
+    'Express.js',
+    'Sails.js',
+    'REST APIs',
+  ],
+  Frontend: [
+    'React',
+    'Next.js',
+    'Astro',
+    'Tailwind CSS',
+    'Ant Design',
+    'Redux Toolkit',
+    'React Router',
+    'TanStack Query',
+  ],
+  'Databases & Data': [
     'MySQL',
-    'PostgreSQL',
+    'MariaDB',
+    'MongoDB',
+    'Supabase',
     'TypeORM',
-    'Redis',
-    'REST',
-    'Swagger/OpenAPI',
-    'Cron jobs',
-    'Multi-tenant RBAC',
-    'i18n (en/ar)',
+    'Prisma',
+    'Drizzle',
+    'Waterline',
   ],
-  'Auth & Payments': ['JWT/OAuth2', 'Passport', 'Stripe'],
-  'APIs & AI': [
-    'Google Cloud Storage',
-    'GBP APIs',
-    'Google Ads API',
-    'Deepseek/OpenAI SDK',
+  'Infrastructure & Architecture': [
+    'Redis / Valkey',
+    'BullMQ',
+    'Firebase',
+    'Multi-Tenant SaaS',
+    'RBAC',
+    'OAuth 2.0',
+    'Webhooks',
   ],
-  'DevOps & Tools': [
+  'Cloud & DevOps': [
     'Docker',
-    'Jest',
-    'Biome',
-    'Railway',
-    'Bitbucket Pipelines',
+    'AWS',
+    'GCP',
     'DigitalOcean',
+    'GitHub Actions',
+    'Bitbucket Pipelines',
+    'CI/CD',
   ],
+  'Tools & Testing': ['Git', 'Jest', 'Vite', 'Webpack', 'Babel'],
 };
 
 const experience = [
   {
-    title: 'Full-Stack Developer',
-    company: 'LocalEyesAi · Canada (Remote)',
+    title: 'Full-Stack Developer / Lead Backend Engineer',
+    company: 'LocalEyes AI · Remote',
     period: 'Jun 2026 – Present',
     summary:
-      'Sole backend engineer on a NestJS / TypeScript SaaS API for local SEO — GBP sync, ranking, billing, and AI audits.',
+      'Architected and developed a multi-tenant NestJS SaaS backend with secure tenant isolation, Google Business Profile synchronization, BullMQ workers, geo-grid rank tracking, AI audits, Stripe billing, and DigitalOcean deployments.',
   },
   {
     title: 'Full-Stack Developer',
-    company: 'KooraKings · Optimiza.ca · Kitchener, Canada (Remote)',
+    company: 'KooraKings · Optimiza · Remote',
     period: 'Jun 2021 – Present',
     summary:
-      'Built and scaled the Node.js / Sails.js backend for Koora Kings, supporting 80K+ users, 1K+ contests, and 2M+ predictions via ~180 REST APIs.',
+      'Built and maintained the Sails.js backend powering sports contests and 2M+ user predictions across approximately 180 REST endpoints, including prediction workflows, fantasy systems, live data synchronization, and administrative APIs.',
   },
   {
     title: 'Front-End Developer',
-    company: 'Riyadh Season (Contract) · Optimiza.ca · Kitchener, Canada (Remote)',
+    company: 'Riyadh Season · Optimiza · Contract · Remote',
     period: 'Jun 2021 – Present',
     summary:
-      'Managed API operations for a 30-page web platform fully integrated with an internally developed CMS; modernized frontend integration and improved performance by 24%.',
+      'Developed and maintained a 30+ page CMS-integrated production platform, improving performance by approximately 24%, modernizing frontend architecture, and reducing the deployment pipeline to approximately 34 seconds.',
   },
 ];
 
 const education = [
   {
-    title: "Bachelor's in Business Administration",
+    title: 'Bachelor of Business Administration',
     org: 'University of Tikrit',
-    period: 'Mar 2022 – Aug 2026',
+    period: 'Aug 2026',
   },
 ];
 
 const certifications = [
   {
-    title: 'Software Engineer',
+    title: 'Software Engineer Certification',
     org: 'HackerRank',
     period: 'Mar 2025',
     url: 'https://www.hackerrank.com/certificates/82d47e7b38f5',
   },
   {
-    title: 'JS / Algorithms and Data Structures',
+    title: 'JavaScript Algorithms and Data Structures',
     org: 'freeCodeCamp',
     period: 'Mar 2025',
     url: 'https://freecodecamp.org/certification/fcc3c73bf9b-a6f3-4c4b-b4e0-173354fc95ad/javascript-algorithms-and-data-structures-v8',
